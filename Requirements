@@ -8,3 +8,10 @@
 ## ✅ Functional Requirements (FR)
 
 - **FR1**: The system shall capture real-time video frames using the connected IMX462 camera.
+- **FR2**: The system shall use a YOLOv5 model to detect and classify objects in each frame.
+- **FR3**: The system shall identify and differentiate between two classes: stuffed bear and stuffed raccoon.
+- **FR4**: Upon detecting a stuffed bear, the system shall play a preloaded `bear.wav` audio file.
+- **FR5**: Upon detecting a stuffed raccoon, the system shall play a preloaded `raccoon.wav` audio file.
+- **FR6**: The system shall log the timestamp and type of detected animal into a text file named `detection_log.txt`.
+
+---
