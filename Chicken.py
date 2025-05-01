@@ -1,52 +1,68 @@
-import cv2
 import torch
-import RPi.GPIO as GPIO
 import pygame
 from datetime import datetime
+import time
+from picamera2 import Picamera2
+import cv2
 
-# Setup for camera, GPIO, and pygame
-cap = cv2.VideoCapture(0)
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(17, GPIO.OUT)  # GPIO pin for floodlight
+# ---- SETTINGS ----
+MODEL_PATH = 'best.pt'
+BEAR_SOUND_PATH = 'bear.wav'
+RACCOON_SOUND_PATH = 'raccoon.wav'
+LOG_FILE_PATH = 'detection_log.txt'
+
+# ---- INITIALIZE MODEL ----
+print("Loading YOLOv5 model...")
+model = torch.hub.load('ultralytics/yolov5', 'custom', path=MODEL_PATH, force_reload=True)
+
+# ---- INITIALIZE CAMERA ----
+print("Initializing Pi Camera with Picamera2...")
+picam2 = Picamera2()
+picam2.preview_configuration.main.size = (640, 480)
+picam2.preview_configuration.main.format = "RGB888"
+picam2.configure("preview")
+picam2.start()
+
+# ---- INITIALIZE AUDIO ----
+print("Initializing audio...")
 pygame.mixer.init()
+bear_sound = pygame.mixer.Sound(BEAR_SOUND_PATH)
+raccoon_sound = pygame.mixer.Sound(RACCOON_SOUND_PATH)
 
-# Load the YOLOv5 model
-model = torch.hub.load('ultralytics/yolov5', 'yolov5s')
+# ---- UTILITIES ----
+def log_detection(label):
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with open(LOG_FILE_PATH, "a") as f:
+        f.write(f"{timestamp} - {label}\n")
+    print(f"[LOGGED] {timestamp} - {label}")
 
-while True:
-    ret, frame = cap.read()  # Capture a frame
-    results = model(frame)  # Detect objects
+def play_sound(label):
+    if label == "stuffed bear":
+        bear_sound.play()
+    elif label == "stuffed raccoon":
+        raccoon_sound.play()
 
-    labels = results.names
-    detections = results.xywh[0]  # Bounding boxes and labels
+# ---- MAIN LOOP ----
+print("Starting detection loop. Press Ctrl+C to exit.")
+try:
+    while True:
+        frame = picam2.capture_array()
+        results = model(frame)
+        labels = results.pandas().xyxy[0]['name'].tolist()
 
-    for detection in detections:
-        label = labels[int(detection[5])]
-        
-        if label == 'person':
-            print("Detected a human.")
-            # Do nothing for human but log it
-            with open('animal_log.txt', 'a') as file:
-                file.write(f"{datetime.now()} - Detected human\n")
-        
-        elif label == 'bear':
-            print("Detected a stuffed bear.")
-            GPIO.output(17, GPIO.HIGH)  # Turn on floodlight
-            pygame.mixer.music.load("bear_sound.wav")  # Play bear sound
-            pygame.mixer.music.play()
-            with open('animal_log.txt', 'a') as file:
-                file.write(f"{datetime.now()} - Detected stuffed bear\n")
-        
-        elif label == 'raccoon':
-            print("Detected a stuffed raccoon.")
-            GPIO.output(17, GPIO.HIGH)  # Turn on floodlight
-            pygame.mixer.music.load("raccoon_sound.wav")  # Play raccoon sound
-            pygame.mixer.music.play()
-            with open('animal_log.txt', 'a') as file:
-                file.write(f"{datetime.now()} - Detected stuffed raccoon\n")
+        detected = set()
+        for label in labels:
+            if label in ["stuffed bear", "stuffed raccoon"]:
+                if label not in detected:
+                    log_detection(label)
+                    play_sound(label)
+                    detected.add(label)
 
-    # Reset floodlight after some time (optional)
-    GPIO.output(17, GPIO.LOW)
+        time.sleep(1)
 
-cap.release()  # Release camera when done
-GPIO.cleanup()  # Clean up GPIO
+except KeyboardInterrupt:
+    print("\nExiting program...")
+
+finally:
+    pygame.mixer.quit()
+    picam2.stop()
