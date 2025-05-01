@@ -9,8 +9,8 @@ import numpy as np
 
 # ---- SETTINGS ----
 MODEL_PATH = 'best.pt'
-BEAR_SOUND_PATH = 'bear.wav'
-RACCOON_SOUND_PATH = 'raccoon.wav'
+BEAR_SOUND_PATH = 'bear.mp3'
+RACCOON_SOUND_PATH = 'raccoon.mp3'
 LOG_FILE_PATH = 'detection_log.txt'
 
 # ---- LOAD MODEL ----
