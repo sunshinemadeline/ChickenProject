@@ -1,0 +1,10 @@
+# 📄 Requirements Document: Stuffed Animal Detection System
+
+**Project Name:** Animal Audio Alert System  
+**Platform:** Raspberry Pi + IMX462 Camera + USB Speaker  
+**Goal:** Detect bears and raccoons using a YOLOv5 model and respond with corresponding audio while logging the event.
+
+---
+## ✅ Functional Requirements (FR)
+
+- **FR1**: The system shall capture real-time video frames using the connected IMX462 camera.
