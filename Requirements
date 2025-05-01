@@ -5,6 +5,7 @@
 **Goal:** Detect bears and raccoons using a YOLOv5 model and respond with corresponding audio while logging the event.
 
 ---
+
 ## ✅ Functional Requirements (FR)
 
 - **FR1**: The system shall capture real-time video frames using the connected IMX462 camera.
@@ -13,5 +14,14 @@
 - **FR4**: Upon detecting a stuffed bear, the system shall play a preloaded `bear.wav` audio file.
 - **FR5**: Upon detecting a stuffed raccoon, the system shall play a preloaded `raccoon.wav` audio file.
 - **FR6**: The system shall log the timestamp and type of detected animal into a text file named `detection_log.txt`.
+
+---
+
+## 🔧 Non-Functional Requirements (NFR)
+
+- **NFR1**: The system shall run on a Raspberry Pi and perform inference in near real-time (under 1 second per frame).
+- **NFR2**: The system shall use OpenCV for video capture and image processing.
+- **NFR3**: The system shall function without requiring a GUI (headless operation).
+- **NFR4**: The system shall be robust to errors, such as failure to access the camera or play audio.
 
 ---
