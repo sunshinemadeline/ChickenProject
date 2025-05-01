@@ -1,0 +1,13 @@
+# 🧸 Raspberry Pi Smart Detector — Animal Alert System
+
+This project uses a Raspberry Pi, YOLOv5 object detection, and OpenCV to distinguish between a **bear** and a **raccoon** 
+using a 2MP IMX462 Ultra Low Light STARVIS camera. When one of these animals is detected, 
+the system plays a corresponding `.mp3` audio alert and logs the detection time and class to a file.
+
+## 🎯 Features
+
+- 📷 Real-time image capture using OpenCV and a libcamera-compatible camera
+- 🤖 Object detection powered by a custom-trained YOLOv5 model
+- 🔊 Plays different sounds when a stuffed bear or stuffed raccoon is detected
+- 📝 Logs detections with timestamps to a text file
+- 🧠 Optimized to run on Raspberry Pi hardware
