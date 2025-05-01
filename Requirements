@@ -31,5 +31,7 @@
 - **AC1**: When a stuffed bear is placed in view of the camera, the system plays the correct audio and logs the event within 5 seconds.
 - **AC2**: When a stuffed raccoon is detected, a different correct audio file is played and the event is logged within 5 seconds.
 - **AC3**: No audio is played and nothing is logged if no known object is detected.
+- **AC4**: The log file contains correctly formatted entries like `2025-05-01 15:42:23 - stuffed bear`.
+- **AC5**: The system handles common runtime errors gracefully and continues operation without crashing.
 
 ---
