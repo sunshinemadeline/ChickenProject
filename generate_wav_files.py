@@ -3,7 +3,7 @@ from scipy.io.wavfile import write
 
 # Settings
 sample_rate = 192000  # High sample rate to support >20kHz (192 kHz is common for pro audio)
-duration = 2  # seconds
+duration = 10  # seconds
 frequency = 25000  # 25 kHz (ultrasonic)
 
 # Time array
